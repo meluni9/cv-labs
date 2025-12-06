@@ -98,4 +98,4 @@ def analyze_zabyria_contours(image_path):
 
 
 if __name__ == "__main__":
-    analyze_zabyria_contours('images/zabyria.png')
+    analyze_zabyria_contours('../images/zabyria.png')
