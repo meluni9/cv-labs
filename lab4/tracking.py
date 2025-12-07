@@ -1,10 +1,6 @@
 import cv2
-import sys
-
 
 def create_tracker_by_name(tracker_type):
-    """Створює об'єкт трекера залежно від версії OpenCV та назви"""
-    # Спроба використати legacy (для нових версій OpenCV)
     try:
         if tracker_type == 'KCF':
             return cv2.legacy.TrackerKCF_create()
@@ -34,7 +30,6 @@ def run_tracker(tracker_type, video_source):
     if not tracker:
         return
 
-    # Відкриття відео
     video = cv2.VideoCapture(video_source)
     if not video.isOpened():
         print("Не вдалося відкрити відео/камеру")
@@ -49,7 +44,6 @@ def run_tracker(tracker_type, video_source):
     print("2. Натисніть SPACE або ENTER для початку трекінгу.")
     print("3. Натисніть ESC, щоб зупинити і повернутися в меню.")
 
-    # Вибір області
     bbox = cv2.selectROI(f"Tracking: {tracker_type}", frame, False)
     # cv2.destroyWindow(f"Tracking: {tracker_type}")
 
@@ -59,7 +53,6 @@ def run_tracker(tracker_type, video_source):
 
     ok = tracker.init(frame, bbox)
 
-    # Список для зберігання FPS
     fps_history = []
 
     while True:
@@ -85,18 +78,13 @@ def run_tracker(tracker_type, video_source):
             status_text = "Lost (Failure)"
             color = (0, 0, 255)  # Червоний
 
-        # --- ВИПРАВЛЕНИЙ БЛОК ВІДОБРАЖЕННЯ ТЕКСТУ ---
-        # Розносимо текст по висоті (Y координата: 30, 60, 90)
 
-        # 1. Назва трекера
         cv2.putText(frame, f"{tracker_type} Tracker", (20, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
 
-        # 2. FPS
         cv2.putText(frame, f"FPS: {int(curr_fps)}", (20, 60),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
 
-        # 3. Статус (тепер не накладається)
         cv2.putText(frame, f"Status: {status_text}", (20, 90),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
 
@@ -120,16 +108,15 @@ def run_tracker(tracker_type, video_source):
     print("-" * 30)
 
 if __name__ == '__main__':
-    # Вкажіть шлях до файлу або 0 для веб-камери
+    # шлях до файлу або 0 для веб-камери
     # video_path = "video.mp4"
     video_path = 0
 
-    # Список обраних 4-х трекерів
     available_trackers = [
-        'CSRT',  # Найточніший, але повільний
-        'MOSSE',  # Найшвидший, менш точний
-        'KCF',  # Баланс швидкості і точності
-        'MEDIANFLOW'  # Добре працює при плавних рухах, добре детектує втрату
+        'CSRT',
+        'MOSSE',
+        'KCF',
+        'MEDIANFLOW'
     ]
 
     while True:
