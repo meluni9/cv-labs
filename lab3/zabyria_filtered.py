@@ -12,6 +12,7 @@ def plot_histogram(image, title, ax):
     ax.set_ylabel("Count")
     ax.plot(hist, color='black')
     ax.set_xlim([0, 256])
+    ax.grid(True, linestyle='--', alpha=0.5)
 
 
 def enhance_contrast_clahe(image):
@@ -78,7 +79,7 @@ def analyze_zabyria_lab3(image_path):
 
     markers = cv2.watershed(filtered, markers)
 
-    output_img = cv2.cvtColor(filtered, cv2.COLOR_BGR2RGB)  # Виводимо на покращеному фоні
+    output_img = cv2.cvtColor(filtered, cv2.COLOR_BGR2RGB)
     count = 0
 
     for label in np.unique(markers):
@@ -95,30 +96,33 @@ def analyze_zabyria_lab3(image_path):
                 cv2.drawContours(output_img, [c], -1, (255, 0, 0), 2)
                 count += 1
 
-    # --- ВІЗУАЛІЗАЦІЯ РЕЗУЛЬТАТІВ ---
-    plt.figure(figsize=(18, 10))
+    # --- ВІЗУАЛІЗАЦІЯ ---
+    plt.figure(figsize=(14, 10))
+    plt.suptitle("Lab 3: Image Enhancement Analysis", fontsize=16)
 
-    ax1 = plt.subplot(2, 3, 1)
+    plt.subplot(2, 2, 1)
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    plt.title("Original Image")
+    plt.title("1. Original Image")
     plt.axis('off')
 
-    ax2 = plt.subplot(2, 3, 4)
-    plot_histogram(image, "Original Histogram", ax2)
-
-    ax3 = plt.subplot(2, 3, 2)
+    plt.subplot(2, 2, 2)
     plt.imshow(cv2.cvtColor(filtered, cv2.COLOR_BGR2RGB))
-    plt.title("Filtered & Enhanced (CLAHE + Bilateral)")
+    plt.title("2. Filtered & Enhanced (CLAHE + Bilateral)")
     plt.axis('off')
 
-    ax4 = plt.subplot(2, 3, 5)
-    plot_histogram(filtered, "Enhanced Histogram (Wider Range)", ax4)
+    ax3 = plt.subplot(2, 2, 3)
+    plot_histogram(image, "3. Original Histogram", ax3)
 
-    ax5 = plt.subplot(1, 3, 3)
+    ax4 = plt.subplot(2, 2, 4)
+    plot_histogram(filtered, "4. Enhanced Histogram (Wider Range)", ax4)
+
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(16, 10))
     plt.imshow(output_img)
-    plt.title(f"Final Result: {count} buildings")
+    plt.title(f"Final Result: {count} buildings detected", fontsize=16)
     plt.axis('off')
-
     plt.tight_layout()
     plt.show()
 
