@@ -11,7 +11,6 @@ def create_tracker_by_name(tracker_type):
         elif tracker_type == "CSRT":
             return cv2.legacy.TrackerCSRT_create()
     except AttributeError:
-        # Для старіших версій OpenCV
         if tracker_type == 'KCF':
             return cv2.TrackerKCF_create()
         elif tracker_type == 'MEDIANFLOW':
