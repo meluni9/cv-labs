@@ -3,6 +3,8 @@ import os
 import glob
 import shutil
 from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import math
 
 source_dir = "dataset"
 output_dir = "clustered_output_cv"
@@ -21,6 +23,38 @@ def extract_color_histogram(image_path):
     cv2.normalize(hist, hist)
 
     return hist.flatten()
+
+
+def show_clusters(n_clusters, output_dir, max_per_cluster=200, num_cols=8):
+    for cluster_id in range(n_clusters):
+        cluster_path = os.path.join(output_dir, f"Cluster_{cluster_id}")
+        images = glob.glob(os.path.join(cluster_path, "*.jpg"))
+
+        if len(images) == 0:
+            continue
+
+        selected_images = images[:max_per_cluster]
+
+        num_samples = len(selected_images)
+        num_rows = math.ceil(num_samples / num_cols)
+
+        plt.figure(figsize=(num_cols * 4, num_rows * 4))
+        plt.suptitle(f"Cluster {cluster_id}", fontsize=18)
+
+        for idx, img_path in enumerate(selected_images):
+            clustered_img = cv2.imread(img_path)
+            clustered_img = cv2.cvtColor(clustered_img, cv2.COLOR_BGR2RGB)
+
+            row = idx // num_cols
+            col = idx % num_cols
+
+            base_index = row * num_cols + col + 1
+
+            ax2 = plt.subplot(num_rows, num_cols, base_index)
+            ax2.imshow(clustered_img)
+            ax2.axis("off")
+
+        plt.show()
 
 
 def main():
@@ -57,3 +91,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    show_clusters(n_clusters, output_dir)
