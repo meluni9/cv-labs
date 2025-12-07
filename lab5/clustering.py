@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans
 
 source_dir = "dataset"
 output_dir = "clustered_output_cv"
-n_clusters = 4
+n_clusters = 3
 
 
 def extract_color_histogram(image_path):
